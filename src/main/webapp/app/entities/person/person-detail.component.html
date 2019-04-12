@@ -1,25 +1,79 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="person">
-            <h2><span>Person</span> {{person.id}}</h2>
-            <hr>
+            <h2><span>Person</span> {{ person.id }}</h2>
+            <hr />
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
                 <dt><span>Fullname</span></dt>
                 <dd>
-                    <span>{{person.fullname}}</span>
+                    <span>{{ person.fullname }}</span>
+                </dd>
+                <dt><span>Document Number</span></dt>
+                <dd>
+                    <span>{{ person.documentNumber }}</span>
+                </dd>
+                <dt><span>Document Type</span></dt>
+                <dd>
+                    <span>{{ person.documentType }}</span>
+                </dd>
+                <dt><span>Birthday</span></dt>
+                <dd>
+                    <span>{{ person.birthday }}</span>
+                </dd>
+                <dt><span>Gender</span></dt>
+                <dd>
+                    <span>{{ person.gender }}</span>
                 </dd>
             </dl>
+            <h2><span>Contacts</span></h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let contact of contacts; let i = index">
+                        <th scope="row">{{ i }}</th>
+                        <td>{{contact.type}}</td>
+                        <td>{{contact.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
+            <h2><span>Addresses</span></h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                         <th scope="col">Type</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">State</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Neighborhood</th>
+                        <th scope="col">Full Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let address of addresses; let i = index"">
+                        <th scope="row">{{ i }}</th>
+                        <td>{{ address.type }}</td>
+                        <td>{{ address.country }}</td>
+                        <td>{{ address.state }}</td>
+                        <td>{{ address.city }}</td>
+                        <td>{{ address.neighborhood }}</td>
+                        <td>{{ address.fullAddress }}</td>
+                    </tr>
+                </tbody>
+            </table>
+                   <button type="submit" (click)="previousState()" class="btn btn-info">
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
             </button>
 
-            <button type="button"
-                    [routerLink]="['/person', person.id, 'edit']"
-                    class="btn btn-primary">
+            <button type="button" [routerLink]="['/person', person.id, 'edit']" class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
             </button>
         </div>

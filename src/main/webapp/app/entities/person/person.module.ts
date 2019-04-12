@@ -11,11 +11,12 @@ import {
     personRoute,
     personPopupRoute
 } from './';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const ENTITY_STATES = [...personRoute, ...personPopupRoute];
 
 @NgModule({
-    imports: [ContactchallengeSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [FormsModule, ReactiveFormsModule, ContactchallengeSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [PersonComponent, PersonDetailComponent, PersonUpdateComponent, PersonDeleteDialogComponent, PersonDeletePopupComponent],
     entryComponents: [PersonComponent, PersonUpdateComponent, PersonDeleteDialogComponent, PersonDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
