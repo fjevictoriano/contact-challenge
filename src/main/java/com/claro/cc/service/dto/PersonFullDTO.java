@@ -19,10 +19,14 @@ public class PersonFullDTO extends PersonDTO implements Serializable {
         super(person);
     }
 
+    public PersonFullDTO(){};
+
     private UserDTO user;
 
+    @NotNull
     private Set<AddressDTO> addresses;
 
+    @NotNull
     private Set<PersonContactDTO> personContacts;
 
     public Set<AddressDTO> getAddresses() {

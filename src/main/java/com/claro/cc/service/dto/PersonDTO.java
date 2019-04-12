@@ -31,7 +31,7 @@ public class PersonDTO implements Serializable {
     @NotNull
     private Gender gender;
 
-
+    @NotNull
     private Long userId;
 
     private String userLogin;

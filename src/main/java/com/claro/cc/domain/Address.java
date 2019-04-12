@@ -1,6 +1,5 @@
 package com.claro.cc.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -22,7 +21,7 @@ import com.claro.cc.domain.enumeration.AddressType;
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -65,7 +64,8 @@ public class Address implements Serializable {
     @JsonIgnoreProperties("addresses")
     private Person person;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -177,7 +177,8 @@ public class Address implements Serializable {
     public void setPerson(Person person) {
         this.person = person;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -201,15 +202,8 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return "Address{" +
-            "id=" + getId() +
-            ", type='" + getType() + "'" +
-            ", country='" + getCountry() + "'" +
-            ", state='" + getState() + "'" +
-            ", city='" + getCity() + "'" +
-            ", neighborhood='" + getNeighborhood() + "'" +
-            ", street='" + getStreet() + "'" +
-            ", fullAddress='" + getFullAddress() + "'" +
-            "}";
+        return "Address{" + "id=" + getId() + ", type='" + getType() + "'" + ", country='" + getCountry() + "'"
+                + ", state='" + getState() + "'" + ", city='" + getCity() + "'" + ", neighborhood='" + getNeighborhood()
+                + "'" + ", street='" + getStreet() + "'" + ", fullAddress='" + getFullAddress() + "'" + "}";
     }
 }

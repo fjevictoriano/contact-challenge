@@ -1,6 +1,5 @@
 package com.claro.cc.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -27,7 +26,7 @@ import com.claro.cc.domain.enumeration.Gender;
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,13 +57,15 @@ public class Person implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Address> addresses = new HashSet<>();
-    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersonContact> personContacts = new HashSet<>();
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -200,7 +201,8 @@ public class Person implements Serializable {
     public void setPersonContacts(Set<PersonContact> personContacts) {
         this.personContacts = personContacts;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -224,13 +226,8 @@ public class Person implements Serializable {
 
     @Override
     public String toString() {
-        return "Person{" +
-            "id=" + getId() +
-            ", fullname='" + getFullname() + "'" +
-            ", documentNumber='" + getDocumentNumber() + "'" +
-            ", documentType='" + getDocumentType() + "'" +
-            ", birthday='" + getBirthday() + "'" +
-            ", gender='" + getGender() + "'" +
-            "}";
+        return "Person{" + "id=" + getId() + ", fullname='" + getFullname() + "'" + ", documentNumber='"
+                + getDocumentNumber() + "'" + ", documentType='" + getDocumentType() + "'" + ", birthday='"
+                + getBirthday() + "'" + ", gender='" + getGender() + "'" + "}";
     }
 }

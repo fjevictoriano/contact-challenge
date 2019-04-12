@@ -27,30 +27,23 @@ public class PersonFullMapper {
     }
 
     public List<PersonFullDTO> personsToPersonFullDTOs(List<Person> users) {
-        return users.stream()
-            .filter(Objects::nonNull)
-            .map(this::personToPersonFullDTO)
-            .collect(Collectors.toList());
+        return users.stream().filter(Objects::nonNull).map(this::personToPersonFullDTO).collect(Collectors.toList());
     }
 
     public PersonFullDTO personToPersonFullDTO(Person person) {
         PersonFullDTO personFullDTO = new PersonFullDTO(person);
-        personFullDTO.setAddresses(person.getAddresses().stream().filter(Objects::nonNull)
-            .map(addressMapper::toDto)
-           .collect(Collectors.toSet()));
+        personFullDTO.setAddresses(person.getAddresses().stream().filter(Objects::nonNull).map(addressMapper::toDto)
+                .collect(Collectors.toSet()));
 
         personFullDTO.setPersonContacts(person.getPersonContacts().stream().filter(Objects::nonNull)
-            .map(personContactMapper::toDto)
-            .collect(Collectors.toSet()));
+                .map(personContactMapper::toDto).collect(Collectors.toSet()));
 
         return personFullDTO;
     }
 
     public List<Person> personFullDTOsToPersons(List<PersonFullDTO> personFullDTOs) {
-        return personFullDTOs.stream()
-            .filter(Objects::nonNull)
-            .map(this::personFullDTOToPerson)
-            .collect(Collectors.toList());
+        return personFullDTOs.stream().filter(Objects::nonNull).map(this::personFullDTOToPerson)
+                .collect(Collectors.toList());
     }
 
     public Person personFullDTOToPerson(PersonFullDTO personFullDTO) {
@@ -65,13 +58,15 @@ public class PersonFullMapper {
             person.setDocumentType(personFullDTO.getDocumentType());
             person.setGender(personFullDTO.getGender());
 
-            person.setAddresses(personFullDTO.getAddresses().stream().filter(Objects::nonNull)
-                .map(addressMapper::toEntity)
-                .collect(Collectors.toSet()));
+            personFullDTO.getAddresses().stream().filter(Objects::nonNull).map(addressMapper::toEntity)
+                    .collect(Collectors.toSet()).forEach(address -> {
+                        person.addAddress(address);
+                    });
 
-            person.setPersonContacts(personFullDTO.getPersonContacts().stream().filter(Objects::nonNull)
-                .map(personContactMapper::toEntity)
-                .collect(Collectors.toSet()));
+            personFullDTO.getPersonContacts().stream().filter(Objects::nonNull).map(personContactMapper::toEntity)
+                    .collect(Collectors.toSet()).forEach(contact -> {
+                        person.addPersonContact(contact);
+                    });
 
             return person;
         }
