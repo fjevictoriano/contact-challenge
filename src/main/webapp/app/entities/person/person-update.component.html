@@ -1,0 +1,206 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form [formGroup]="myForm" (ngSubmit)="save(f)" #f="ngForm">
+            <div formGroupName="person">
+                <h2 id="jhi-address-heading">Create or edit a Person</h2>
+                <!-- <jhi-alert-error></jhi-alert-error> -->
+                <div class="form-group" [hidden]="showID">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fullname">Full name</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="fullname"
+                        id="field_fullname"
+                        formControlName="fullname"
+                        minlength="4"
+                        maxlength="64"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_documentNumber">documentNumber</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="documentNumber"
+                        id="field_documentNumber"
+                        formControlName="documentNumber"
+                        minlength="4"
+                        maxlength="64"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_documentType">Document Type</label>
+                    <select class="form-control" name="documentType" formControlName="documentType" id="field_documentType">
+                        <option value="ID">ID</option>
+                        <option value="PASSPORT">PASSPORT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_birthday">Birth Day</label>
+                    <div class="d-flex">
+                        <input id="field_birthday" type="datetime-local" class="form-control" name="birthday" formControlName="birthday" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_gender">Gender</label>
+                    <select class="form-control" name="gender" formControlName="gender" id="field_gender">
+                        <option value="MALE">MALE</option>
+                        <option value="FEMALE">FEMALE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" formControlName="userId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id" *ngFor="let userOption of users; trackBy: trackUserById">
+                            {{ userOption.login }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div formArrayName="contacts">
+                    <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let contact of myForm.get('contacts').controls; let j = index">
+                        <div [formGroupName]="j">
+                            <h2 id="jhi-address-heading">Create or edit a Contact</h2>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_type">Type</label>
+                                <select class="form-control" name="type" formControlName="type" id="field_type" required>
+                                    <option value="MAIN">MAIN</option>
+                                    <option value="PHONE">PHONE</option>
+                                    <option value="CELLPHONE">CELLPHONE</option>
+                                    <option value="MAIL">MAIL</option>
+                                    <option value="FAX">FAX</option>
+                                    <option value="OTHER">OTHER</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_value">Value</label>
+                                <input type="text" class="form-control" name="value" id="field_value" formControlName="value" requried />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button style="margin-top:5px; margin-bottom:5px;" type="button" class="btn btn-primary btn-sm" (click)="addNewContact()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Contact
+                </button>
+            </div>
+            <div formArrayName="addresses">
+                <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let address of myForm.get('addresses').controls; let i = index">
+                    <div [formGroupName]="i">
+                        <div>
+                            <h2 id="jhi-address-heading">Create or edit a Address</h2>
+
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_type">Type</label>
+                                <select class="form-control" name="type" formControlName="type" id="field_type" required>
+                                    <option value="MAIN">MAIN</option>
+                                    <option value="HOME">HOME</option>
+                                    <option value="WORK">WORK</option>
+                                    <option value="OTHER">OTHER</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_country">Country</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="country"
+                                    id="field_country"
+                                    formControlName="country"
+                                    minlength="4"
+                                    maxlength="64"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_state">State</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="state"
+                                    id="field_state"
+                                    formControlName="state"
+                                    minlength="4"
+                                    maxlength="64"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_city">City</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="city"
+                                    id="field_city"
+                                    formControlName="city"
+                                    minlength="4"
+                                    maxlength="64"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_neighborhood">Neighborhood</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="neighborhood"
+                                    id="field_neighborhood"
+                                    formControlName="neighborhood"
+                                    minlength="4"
+                                    maxlength="64"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_street">Street</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="street"
+                                    id="field_street"
+                                    formControlName="street"
+                                    minlength="4"
+                                    maxlength="64"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_fullAddress">Full Address</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="fullAddress"
+                                    id="field_fullAddress"
+                                    formControlName="fullAddress"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button style="margin-top:5px; margin-bottom:5px;" type="button" class="btn btn-primary btn-sm" (click)="addNewAddress()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Address
+                </button>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="myForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
