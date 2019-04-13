@@ -2,9 +2,9 @@
     <div class="col-8">
         <form [formGroup]="myForm" (ngSubmit)="save(f)" #f="ngForm">
             <div formGroupName="person">
-                <h2 id="jhi-address-heading">Create or edit a Person</h2>
+                <h2 id="jhi-person-heading">Create or edit a Person</h2>
                 <!-- <jhi-alert-error></jhi-alert-error> -->
-                <div class="form-group" [hidden]="showID">
+                <div class="form-group" [hidden]="this.myForm.value.showID">
                     <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
                 </div>
@@ -66,13 +66,12 @@
                         </option>
                     </select>
                 </div>
-            </div>
 
             <div class="form-group">
-                <div formArrayName="contacts">
-                    <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let contact of myForm.get('contacts').controls; let j = index">
+                <div formArrayName="personContacts">
+                    <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let contact of this.myForm.get('person').get('personContacts').controls; let j = index">
                         <div [formGroupName]="j">
-                            <h2 id="jhi-address-heading">Create or edit a Contact</h2>
+                            <h2 id="jhi-contacts-heading">Create or edit a Contact</h2>
                             <div class="form-group">
                                 <label class="form-control-label" for="field_type">Type</label>
                                 <select class="form-control" name="type" formControlName="type" id="field_type" required>
@@ -96,7 +95,7 @@
                 </button>
             </div>
             <div formArrayName="addresses">
-                <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let address of myForm.get('addresses').controls; let i = index">
+                <div style="margin-top:5px; margin-bottom:5px;" *ngFor="let address of this.myForm.get('person').get('addresses').controls; let i = index">
                     <div [formGroupName]="i">
                         <div>
                             <h2 id="jhi-address-heading">Create or edit a Address</h2>
@@ -188,6 +187,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
                 <button style="margin-top:5px; margin-bottom:5px;" type="button" class="btn btn-primary btn-sm" (click)="addNewAddress()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Address
                 </button>

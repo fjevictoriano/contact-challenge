@@ -14,8 +14,6 @@ import { IPersonContact } from 'app/shared/model/person-contact.model';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Person } from '../../shared/model/person.model';
 import { PersonContact } from '../../shared/model/person-contact.model';
-import { AddressService } from '../address/address.service';
-import { PersonContactService } from '../person-contact/person-contact.service';
 
 @Component({
     selector: 'jhi-person-update',
@@ -26,42 +24,46 @@ export class PersonUpdateComponent implements OnInit {
     person: IPerson;
     isSaving: boolean;
     users: IUser[];
-    showID: boolean;
     data = {
-        person: {},
-        contacts: [],
-        addresses: []
+        showID: true,
+        person: {
+            addresses: [],
+            personContacts: []
+        }
     };
 
     constructor(
         private fb: FormBuilder,
         protected jhiAlertService: JhiAlertService,
         protected personService: PersonService,
-        protected addressService: AddressService,
-        protected personContactService: PersonContactService,
         protected userService: UserService,
         protected activatedRoute: ActivatedRoute
     ) {
-        this.showID = true;
         this.person = new Person();
-        this.person.personContacts = [{}];
-
         this.myForm = this.fb.group({
-            person: this.fb.group(this.person),
-            contacts: this.fb.array([]),
-            addresses: this.fb.array([])
+            showID: true,
+            person: this.fb.group({
+                ...this.person,
+
+                addresses: this.fb.array([]),
+                personContacts: this.fb.array([])
+            })
         });
     }
     ngOnInit() {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ person }) => {
-            if (person.id !== undefined) {
-                this.showID = false;
-                this.loadPerson(person);
-                this.loadConcats();
-                this.loadAddresses();
+            if (person.id) {
+                this.personService
+                    .find(person.id)
+                    .pipe(
+                        filter((mayBeOk: HttpResponse<IPerson>) => mayBeOk.ok),
+                        map((response: HttpResponse<IPerson>) => response.body)
+                    )
+                    .subscribe((res: IPerson) => this.setPersonForm(res), (res: HttpErrorResponse) => this.onError(res.message));
             }
         });
+
         this.userService
             .query()
             .pipe(
@@ -70,66 +72,48 @@ export class PersonUpdateComponent implements OnInit {
             )
             .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
     }
-    loadPerson(person: IPerson) {
-        const control = <FormGroup>this.myForm.controls.person;
-        control.patchValue(person);
-    }
 
-    loadConcats() {
-        this.personContactService
-            .query()
-            .pipe(
-                filter((mayBeOk: HttpResponse<IPersonContact[]>) => mayBeOk.ok),
-                map((response: HttpResponse<IPersonContact[]>) => response.body)
-            )
-            .subscribe((res: IPersonContact[]) => this.setContacts(res), (res: HttpErrorResponse) => this.onError(res.message));
-    }
-
-    setContacts(res: IPersonContact[]) {
-        const personID = this.myForm.value.person.id;
-        const control = <FormArray>this.myForm.controls.contacts;
-        res.filter(val => val.personId === personID).forEach(contact => {
-            control.push(this.fb.group(contact));
+    setPersonForm(person: IPerson) {
+        this.myForm = this.fb.group({
+            showID: false,
+            person: this.fb.group({
+                ...person,
+                addresses: this.fb.array(this.setAddresses(person.addresses)),
+                personContacts: this.fb.array(this.setPersonContacts(person.personContacts))
+            })
         });
     }
 
-    loadAddresses() {
-        this.addressService
-            .query()
-            .pipe(
-                filter((mayBeOk: HttpResponse<IAddress[]>) => mayBeOk.ok),
-                map((response: HttpResponse<IAddress[]>) => response.body)
-            )
-            .subscribe((res: IAddress[]) => this.setAddresses(res), (res: HttpErrorResponse) => this.onError(res.message));
+    setAddresses(addresses) {
+        let addressesControl = [];
+        addresses.forEach(address => {
+            addressesControl.push(this.fb.group(address));
+        });
+        return addressesControl;
     }
 
-    setAddresses(res: IAddress[]) {
-        const personID = this.myForm.value.person.id;
-        const control = <FormArray>this.myForm.controls.addresses;
-        res.filter(val => val.personId === personID).forEach(address => {
-            control.push(this.fb.group(address));
+    setPersonContacts(contacts) {
+        let contactsControls = [];
+        contacts.forEach(contact => {
+            contactsControls.push(this.fb.group(contact));
         });
+        return contactsControls;
     }
 
     addNewContact() {
         const personContact: IPersonContact = new PersonContact();
-        personContact.personId = this.myForm.value.person.id;
-        const control = <FormArray>this.myForm.controls.contacts;
+        const control = <FormArray>this.myForm.controls.person.get('personContacts');
         control.push(this.fb.group(personContact));
     }
 
     addNewAddress() {
         const address: IAddress = new Address();
-        address.personId = this.myForm.value.person.id;
-        const control = <FormArray>this.myForm.controls.addresses;
+        const control = <FormArray>this.myForm.controls.person.get('addresses');
         control.push(this.fb.group(address));
     }
 
     save(f) {
-        const person = <IPerson>this.myForm.value.person;
-        person.addresses = <IAddress[]>this.myForm.value.addresses;
-        person.personContacts = <IPersonContact[]>this.myForm.value.contacts;
-        console.log(JSON.stringify(person));
+        const person = <IPerson>this.myForm.controls.person.value;
         this.isSaving = true;
         if (person.id) {
             this.subscribeToSaveResponse(this.personService.update(person));
